@@ -1,0 +1,6 @@
+>Velenas
+gelezies	| 150
+cinko		| 20
+>Alkune
+plieno		| 150
+angliu		| 10

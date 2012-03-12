@@ -240,6 +240,22 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\Iingredient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\List.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Order.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Recipe.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -259,6 +275,18 @@
 			</File>
 			<File
 				RelativePath=".\app.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\Orders.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\Receptai.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\Rezults.txt"
 				>
 			</File>
 		</Filter>
