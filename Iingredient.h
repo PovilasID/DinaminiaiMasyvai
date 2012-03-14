@@ -16,7 +16,7 @@ public:
 	void setAmount	(double a)				{ materialAmoutn = a;	}
 	void setIng		(string a, double b)	{ materialName = a;	materialAmoutn = b;	}
 	//Get
-	string getIName()	{ return materialName;		}
+	string getName()	{ return materialName;		}
 	double getAmount()  { return  materialAmoutn;	}
 };
 
