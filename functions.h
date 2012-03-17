@@ -17,15 +17,22 @@
 #include <locale>
 #include <sstream>
 
-const char static DELIM = '>' ;
 
 using namespace std;
 using namespace System;
 
+const char static DELIM = '>' ;
+const char*  RECIPES = "Receptai.txt";
+const char*  ORDERS = "Orders.txt";
+extern const char*  RESULTS = "Rezults.txt";
+
+
+
+
 void readRecipes(Recipe* &R, int n){
   string sTemp; 
 
-  ifstream fileR("Receptai.txt"); //DO NOT FORGET THIS
+  ifstream fileR(RECIPES); //DO NOT FORGET THIS
   int i = 0;
   bool read =  true;
   for(int i = 0; i<n; i++) {
@@ -55,7 +62,7 @@ void readRecipes(Recipe* &R, int n){
 
 void readOrders(vector<Order> & o){
 	string sTemp;
-  ifstream fileO("Orders.txt"); //DO NOT FORGET THIS
+  ifstream fileO(ORDERS); //DO NOT FORGET THIS
 
   while(getline(fileO, sTemp)) {
 		string::const_iterator pos = find(sTemp.begin(), sTemp.end(), '|');
@@ -118,7 +125,7 @@ void getData(vector<Iingredient> & c, bool & noDuplicates){
 
 
 
-  ifstream fileN("Receptai.txt"); //DO NOT FORGET THIS
+  ifstream fileN(RECIPES); //DO NOT FORGET THIS
   int n = 0;
   while(!fileN.eof()){getline(fileN,sTemp); if(sTemp[0] == DELIM)n++;}
   fileN.close();
@@ -135,7 +142,7 @@ void getData(vector<Iingredient> & c, bool & noDuplicates){
 }
 
 void writeData(vector<Iingredient> c){
-  ofstream fileRez ("Rezults.txt"); //DO NOT FORGET THIS
+  ofstream fileRez (RESULTS); //DO NOT FORGET THIS
   if (fileRez.is_open())  {
 	fileRez << Line(53) << endl;
 	fileRez << left << "|" <<setw(5) << " " <<setw(25) << "Medziagos pavadinimas" << "|" << setw(7) << " " << setw(13) << "KIEKIS" << "|" << endl;
@@ -157,8 +164,8 @@ void sortDataAsc(vector<Iingredient> & c){
 	for (int i = 0; i<(n/2);i++){
 		min=i;  max=i; nn=n-i-1;
 		for (int j=i+1; j<=nn; j++){
-			if (c[j].getAmount()<c[min].getAmount()) min=j;
-			else if (c[j].getAmount()>c[max].getAmount()) max=j;
+			if (c[j]<c[min]) min=j;
+			else if (c[j]>c[max]) max=j;
 		}
 		d=c[i].getName();c[i].setName(c[min].getName()); c[min].setName(d);
 		b=c[i].getAmount();c[i].setAmount(c[min].getAmount()); c[min].setAmount(b);
@@ -181,8 +188,8 @@ void sortDataDesc(vector<Iingredient> & c){
 	for (int i = 0; i<(n/2);i++){
 		min=i;  max=i; nn=n-i-1;
 		for (int j=i+1; j<=nn; j++){
-			if (c[j].getAmount()>c[min].getAmount()) min=j;
-			else if (c[j].getAmount()<c[max].getAmount()) max=j;
+			if (c[j]>c[min]) min=j;
+			else if (c[j]<c[max]) max=j;
 		}
 		d=c[i].getName();c[i].setName(c[min].getName()); c[min].setName(d);
 		b=c[i].getAmount();c[i].setAmount(c[min].getAmount()); c[min].setAmount(b);

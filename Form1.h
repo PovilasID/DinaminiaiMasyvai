@@ -19,7 +19,6 @@
 #include <locale>
 #include <sstream>
 
-
 namespace DinaminaiMasyvai {
 
 	using namespace System;
@@ -30,35 +29,6 @@ namespace DinaminaiMasyvai {
 	using namespace System::Drawing;
 	using namespace System::Runtime::InteropServices;
 
-	//* STRIGN MANIPULATION */
-	//TRIMMING
-	// trim from end
-	static inline string &rtrim(string &s) {
-			s.erase(find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(), s.end());
-			return s;
-	}
-	//// trim from start
-	static inline string &ltrim(string &s) {
-			s.erase(s.begin(), find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace))));
-			return s;
-	}
-	//// trim from both ends
-	static inline std::string &trim(std::string &s) {
-			return ltrim(rtrim(s));
-	}
-
-	double string_to_double( const std::string& s ) {
-	   std::istringstream i(s);
-	   double x;
-	   if (!(i >> x))
-		 return 0;
-	   return x;
-	 }
-	string Line(int a){
-		string l = "*";
-		for(int i = 0; i < a-2; i++) l+="-";
-		return l+"*";
-	}
 
 	/// <summary>
 	/// Summary for Form1
@@ -91,11 +61,14 @@ namespace DinaminaiMasyvai {
 				delete components;
 			}
 		}
+
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
+
+
 	protected: 
 
 
@@ -146,6 +119,7 @@ namespace DinaminaiMasyvai {
 			// 
 			// button2
 			// 
+			this->button2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->button2->Enabled = false;
 			this->button2->Location = System::Drawing::Point(220, 12);
 			this->button2->Name = L"button2";
@@ -157,6 +131,7 @@ namespace DinaminaiMasyvai {
 			// 
 			// button3
 			// 
+			this->button3->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->button3->Location = System::Drawing::Point(493, 12);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
@@ -167,9 +142,10 @@ namespace DinaminaiMasyvai {
 			// 
 			// comboBox1
 			// 
+			this->comboBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->comboBox1->FormattingEnabled = true;
 			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"Pasirinkite tavrka...", L"Didejimo", L"Mazejimo"});
-			this->comboBox1->SelectedIndex = 0;
 			this->comboBox1->Location = System::Drawing::Point(93, 14);
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(121, 21);
@@ -193,10 +169,10 @@ namespace DinaminaiMasyvai {
 		}
 
 #pragma endregion
+		static String^ resultsSysString = gcnew String(RESULTS);
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 					vector<Iingredient> c;
 					bool dup;
-					
 					getData(c, dup);
 					if(!dup){
 						MessageBox::Show("Receptu faile yra receptu su vienodai pavadinimais. \nPrasome ivesti receptus su unikaliais pavadinimais ir pasalinti kopijas",
@@ -204,7 +180,7 @@ namespace DinaminaiMasyvai {
 						Close();					
 					}else{
 						writeData(c);
-						richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+						richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
 					}
 
 			 }//End of button1_Click
@@ -224,11 +200,11 @@ namespace DinaminaiMasyvai {
 						}else if(comboBox1->SelectedIndex == 1){
 							sortDataAsc(c);
 							writeData(c);
-							richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+							richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
 						}else if(comboBox1->SelectedIndex == 2){
 							sortDataDesc(c);
 							writeData(c);
-							richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+							richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
 						}
 					}
 			 }

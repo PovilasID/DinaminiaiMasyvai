@@ -18,5 +18,13 @@ public:
 	//Get
 	string getName()	{ return materialName;		}
 	double getAmount()  { return  materialAmoutn;	}
+
+	//Operators
+	bool operator > (Iingredient right){
+		return materialAmoutn > right.materialAmoutn;
+	}
+	bool operator < (Iingredient right){
+		return materialAmoutn < right.materialAmoutn;
+	}
 };
 
