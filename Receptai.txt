@@ -4,3 +4,4 @@ cinko		| 20
 >Alkune
 plieno		| 150
 angliu		| 10
+vanadzio	| 3

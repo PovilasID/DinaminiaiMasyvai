@@ -4,6 +4,7 @@
 #include "Order.h"
 #include "List.h"
 #include "Iingredient.h"
+#include "functions.h"
 
 #include <iostream>
 #include <string>
@@ -93,6 +94,8 @@ namespace DinaminaiMasyvai {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 	private: System::Windows::Forms::Button^  button2;
+	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::ComboBox^  comboBox1;
 	protected: 
 
 
@@ -114,6 +117,8 @@ namespace DinaminaiMasyvai {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -128,6 +133,11 @@ namespace DinaminaiMasyvai {
 			// 
 			// richTextBox1
 			// 
+			this->richTextBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"Lucida Console", 8.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->richTextBox1->Location = System::Drawing::Point(12, 41);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->Size = System::Drawing::Size(556, 290);
@@ -136,7 +146,8 @@ namespace DinaminaiMasyvai {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(93, 12);
+			this->button2->Enabled = false;
+			this->button2->Location = System::Drawing::Point(220, 12);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 2;
@@ -144,11 +155,34 @@ namespace DinaminaiMasyvai {
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &Form1::button2_Click);
 			// 
+			// button3
+			// 
+			this->button3->Location = System::Drawing::Point(493, 12);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(75, 23);
+			this->button3->TabIndex = 3;
+			this->button3->Text = L"Uþdaryti";
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &Form1::button3_Click);
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"Pasirinkite tavrka...", L"Didejimo", L"Mazejimo"});
+			this->comboBox1->SelectedIndex = 0;
+			this->comboBox1->Location = System::Drawing::Point(93, 14);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(121, 21);
+			this->comboBox1->TabIndex = 4;
+			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::comboBox1_SelectedIndexChanged);
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(580, 343);
+			this->Controls->Add(this->comboBox1);
+			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->richTextBox1);
 			this->Controls->Add(this->button1);
@@ -158,145 +192,52 @@ namespace DinaminaiMasyvai {
 
 		}
 
-	private: void getData(vector<Iingredient> & c){
-			 	 Recipe* R;
-				 vector<Order> o;
-				 //vector<Iingredient> c;
-				 const char DELIM = '>' ;
-
-
-				  ifstream fileN("Receptai.txt"); //DO NOT FORGET THIS
-				  string sTemp; 
-				  int n = 0;
-				  while(!fileN.eof()){getline(fileN,sTemp); if(sTemp[0] == DELIM)n++;}
-				  fileN.close();
-				
-				  R = new Recipe[n];
-				  for(int i = 0; i<n; i++) R[i].expandIng(0);
-
-				  ifstream fileR("Receptai.txt"); //DO NOT FORGET THIS
-				
-				  int i = 0;
-				  bool read =  true;
-				  for(int i = 0; i<n; i++) {
-					if(!sTemp.empty() && sTemp[0]==DELIM){
-						if(read){getline(fileR, sTemp);}
-						R[i].setRName(sTemp.substr(1));
-					}else{
-						R[i].toFirstIng();
-						do {
-							if(!sTemp.empty() && sTemp[0] != DELIM){
-								string::const_iterator pos = find(sTemp.begin(), sTemp.end(), '|');
-								string name(sTemp.begin(), pos);
-								string a_raw(pos + 1, sTemp.end());
-								a_raw = trim(a_raw);
-								double amount(atof(a_raw.c_str()));
-								R[i].setIng(trim(name), amount);
-								R[i].toNextIng();
-							}else{
-								bool read = false;
-								break;
-							}
-						}while(getline(fileR, sTemp));
-					}
-				  }
-				  //for(int i = 0; i< 2; i++){
-					 // R[i].setRName("Velenas");
-					 // for(int j = 0; j<2; j++){
-						//  R[i].setIng("ingrediento vardas", 15.5);
-						//  R[i].toNextIng();
-					 // }
-				  //}
-
-				  ifstream fileO("Orders.txt"); //DO NOT FORGET THIS
-			
-				  while(getline(fileO, sTemp)) {
-						string::const_iterator pos = find(sTemp.begin(), sTemp.end(), '|');
-						string nameO(sTemp.begin(), pos);
-						string a_rawO(pos + 1, sTemp.end());
-						int units(atoi(trim(a_rawO).c_str()));
-						o.push_back(Order(trim(nameO), units));
-				  }
-					
-					int ri=0;
-					int j = 0;
-					int k = 0;
-					int sr = -1;
-					int sc = -1;
-					double currentAmount;
-					for(int i = 0; i < int(o.size()); i++){ //Sukami visi  uzsakymai
-						for(int l = 0; l < n; l++){ //Surandamas uzsakyma atitinkantis receptas
-							if(R[l].getRName() == o[i].getName()){ sr = l; break; }
-						}
-						if(sr != -1){
-							R[sr].toFirstIng();
-							while(R[sr].notLastIng()){//Sukamas ciklas per visus rasto recepto ingridientus
-								for(int k = 0; k < int(c.size()); k++){
-									if(c[k].getName() == R[sr].getIngName()){ sc = i; break;}
-								}
-								currentAmount = R[sr].getIngAmount()*o[i].getUnits();
-								if(sc == -1){
-									c.push_back(Iingredient(R[sr].getIngName(), currentAmount));
-								}else{
-									c[sc].setAmount(c[sc].getAmount()+currentAmount);			
-								}
-								R[sr].toNextIng();
-							}
-						}
-					}
-				
-			 }
-			 private: void writeData(vector<Iingredient> c){
-				  ofstream fileRez ("Rezults.txt"); //DO NOT FORGET THIS
-				  if (fileRez.is_open())  {
-					fileRez << Line(150) << endl;
-					fileRez << left << "|" <<setw(28)<< "Medziagos pavadinimas" << "|" << setw(19) << "KIEKIS" << "|" << endl;
-					fileRez << Line(150) << endl;
-					for(int i = 0; i < int(c.size()); i++){
-						fileRez << left << "|" <<setw(28)<< c[i].getName() << "|" << setw(19) << right << c[i].getAmount() << "|" << endl;
-					}
-					fileRez << Line(50) << endl;
-					fileRez.close();
-				  }
-			 }
-			 //private: void sortData(vector<Iingredient> & c){
-			 //   double b;
-				//string d;
-				//int max;
-				//for (i=0; i<(n/2);i++){
-				//min=i; max=i; nn=n-i-1;
-				//for (j=i+1; j<=nn; j++){
-				//	if (c[j].getAmount()<c[min].getAmount()) min=j;
-				//	else if (c[j].getAmount()>c[max].getAmount()) max=j;
-				//}
-				//d=c[i].getName();c[i].setName(c[min].getName()); c[min].setName(b);
-				//b=c[i].getAmount();c[i].setAmount(c[min].getAmount()); c[min].setAmount(b);
-				//if (max != i){
-				//d=c[nn].getName();c[nn].setName(c[max].getName()); c[max].setName(b);
-				//b=c[nn].getAmount();c[nn].setAmount(c[max].getAmount()); c[max].setAmount(b);
-				//}else{
-				//d=c[nn].getName();c[nn].setName(c[min].getName()); c[min].setName(b);
-				//b=c[nn].getAmount();c[nn].setAmount(c[min].getAmount()); c[min].setAmount(b);
-				//
-			 //}
-
-
 #pragma endregion
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 					vector<Iingredient> c;
-					getData(c);
-					writeData(c);
-
-				  richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+					bool dup;
+					
+					getData(c, dup);
+					if(!dup){
+						MessageBox::Show("Receptu faile yra receptu su vienodai pavadinimais. \nPrasome ivesti receptus su unikaliais pavadinimais ir pasalinti kopijas",
+							"KLAIDA! Apskaiciavimas negalimas",MessageBoxButtons::OK,MessageBoxIcon::Stop);
+						Close();					
+					}else{
+						writeData(c);
+						richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+					}
 
 			 }//End of button1_Click
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 					vector<Iingredient> c;
-					getData(c);
-					//sortData(c);
-					writeData(c);
-
-				  richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+					bool dup;
+					
+					getData(c, dup);
+					if(!dup){
+						MessageBox::Show("Recuptu faile yra receptu su vienodai pavadinimais. \nPrasome ivesti receptus su unikaliais pavadinimais ir pasalinti kopijas",
+							"KLAIDA! Surykiavimas negalimas",MessageBoxButtons::OK,MessageBoxIcon::Stop);
+						Close();					
+					}else{
+						if(comboBox1->SelectedIndex == 0){
+							MessageBox::Show("Prasome pasirinkti rusiavimo metoda",
+								"Nepasrinktas rusiavimo metodas",MessageBoxButtons::OK,MessageBoxIcon::Warning);
+						}else if(comboBox1->SelectedIndex == 1){
+							sortDataAsc(c);
+							writeData(c);
+							richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+						}else if(comboBox1->SelectedIndex == 2){
+							sortDataDesc(c);
+							writeData(c);
+							richTextBox1->LoadFile("Rezults.txt", RichTextBoxStreamType::PlainText);
+						}
+					}
 			 }
+private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+			 Close();
+		 }
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 if(comboBox1->SelectedIndex != 0){ button2->Enabled = true;}else{ button2->Enabled = false; }
+
+		 }
 };
 }
