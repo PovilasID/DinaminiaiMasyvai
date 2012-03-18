@@ -11,6 +11,8 @@
 #include <locale>
 #include <sstream>
 
+using namespace System;
+using namespace System::Runtime::InteropServices;
 
 //* STRIGN MANIPULATION */
 //TRIMMING

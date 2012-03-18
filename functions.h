@@ -3,6 +3,7 @@
 #include "List.h"
 #include "Iingredient.h"
 #include "CodeToadTongue.h"
+#include "Form1.h"
 
 #include <iostream>
 #include <string>
@@ -20,19 +21,22 @@
 
 using namespace std;
 using namespace System;
+using namespace System::Runtime::InteropServices;
 
 const char static DELIM = '>' ;
 const char*  RECIPES = "Receptai.txt";
 const char*  ORDERS = "Orders.txt";
 extern const char*  RESULTS = "Rezults.txt";
 
+	//IntPtr strptr = (Marshal::StringToHGlobalAnsi(getOrdersFile()));
+	//const char* str = (const char*)strptr.ToPointer();
+	//Marshal::FreeHGlobal(strptr);
 
 
-
-void readRecipes(Recipe* &R, int n){
+void readRecipes(Recipe* &R,const char* rFilePath, int n){
   string sTemp; 
 
-  ifstream fileR(RECIPES); //DO NOT FORGET THIS
+  ifstream fileR(rFilePath); //DO NOT FORGET THIS
   int i = 0;
   bool read =  true;
   for(int i = 0; i<n; i++) {
@@ -60,16 +64,21 @@ void readRecipes(Recipe* &R, int n){
   }
 }
 
-void readOrders(vector<Order> & o){
+void readOrders(vector<Order> & o, const char* oPath, int & error){
 	string sTemp;
-  ifstream fileO(ORDERS); //DO NOT FORGET THIS
+  ifstream fileO(oPath); //DO NOT FORGET THIS
 
   while(getline(fileO, sTemp)) {
 		string::const_iterator pos = find(sTemp.begin(), sTemp.end(), '|');
-		string nameO(sTemp.begin(), pos);
-		string a_rawO(pos + 1, sTemp.end());
-		int units(atoi(trim(a_rawO).c_str()));
-		o.push_back(Order(trim(nameO), units));
+		if(pos._Myptr[0] == '|'){
+			string nameO(sTemp.begin(), pos);
+			string a_rawO(pos + 1, sTemp.end());
+			int units(atoi(trim(a_rawO).c_str()));
+			o.push_back(Order(trim(nameO), units));
+		}else{
+			error = 7;
+			break;
+		}
   }
 }
 
@@ -118,25 +127,55 @@ void checkAgainstDuplicates(bool & noDuplicates, Recipe* R, int n){
 }
 
 
-void getData(vector<Iingredient> & c, bool & noDuplicates){
+void getData(vector<Iingredient> & c, String^ recipesFilePath, String^ orderFilePath, int & error){
  Recipe* R;
  vector<Order> o;
  string sTemp;
+ error = -1;
+ int n = 0;
 
+ 
+	if(String::IsNullOrEmpty(recipesFilePath)){ 
+		error = 0; 
+	}else if(error == -1){
+		const char* rFilePath = (const char*)(void*)Marshal::StringToHGlobalAnsi(recipesFilePath);
 
+		ifstream fileN(rFilePath); //DO NOT FORGET THIS
+		if(fileN.good()){
+		  while(!fileN.eof()){getline(fileN,sTemp); if(sTemp[0] == DELIM)n++;}
+		  fileN.close();
+		}else{
+		  error = 1;
+		}
 
-  ifstream fileN(RECIPES); //DO NOT FORGET THIS
-  int n = 0;
-  while(!fileN.eof()){getline(fileN,sTemp); if(sTemp[0] == DELIM)n++;}
-  fileN.close();
+		if(n != 0){
+			R = new Recipe[n];
+			readRecipes(R, rFilePath, n);
+			bool noDuplicates;
+			checkAgainstDuplicates(noDuplicates, R, n);
+			if(!noDuplicates){
+				error = 3;
+			}
+		}else{
+			error = 2;
+		}
+	}
 
-  R = new Recipe[n];
-  readRecipes(R,n);
+	if(String::IsNullOrEmpty(orderFilePath) && error == -1){
+		error = 5;
+	}else if(String::IsNullOrEmpty(orderFilePath) && error == 0){
+		error = 10;
+	}else if(error == -1){
+		const char* oFilePath = (const char*)(void*)Marshal::StringToHGlobalAnsi(orderFilePath);
+		readOrders(o, oFilePath, error);
+		if(int(o.size()) == 0 || error != -1){
+			error = 7;
+		}
+	}
 
-	checkAgainstDuplicates(noDuplicates, R, n);
-
-	readOrders(o);
-	calculateResults(R, o, c, n);
+	if(error == -1){
+		calculateResults(R, o, c, n);
+	}
 	
 
 }
