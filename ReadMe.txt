@@ -1,33 +1,23 @@
-========================================================================
-    APPLICATION : DinaminaiMasyvai Project Overview
-========================================================================
+UÞDUOTIS:
+Yra pateikti du duomenø failai. Viename ið jø suraðyti detaliø receptai ir jø ingredientai 
+su ingredientopavadinimu ir kiekiu.
+Kitame yra detalës pavadinimas ir uþsakomø detaliø kiekis.
+Reikia ukurti programà, kuri apskaièiuotø kiek iðvis medþiagø reiks uþsakymui ávykdyti.
 
-AppWizard has created this DinaminaiMasyvai Application for you.  
+ÁGYVENDINIMAS:
+Programa turi trys klases:
+1. Ingredientai - paprasta klasë skirta saugoti ir saugiai graþinti ingrediento duomenis
+2. Receptai - Kontenerinë klasë sauganti ingredinetø klasës objektø masyvà ir detalës pavadinimà.
+Ji taip pat atsakinga uþ duomenø suraðymà ir iðvedimà ið ir á jos kinta,uosius.
+3. Uþsakymai -  paprasta klasë skirta saugoti ir saugiai graþinti uþsakymo duomenis
 
-This file contains a summary of what you will find in each of the files that
-make up your DinaminaiMasyvai application.
-
-DinaminaiMasyvai.vcproj
-    This is the main project file for VC++ projects generated using an Application Wizard. 
-    It contains information about the version of Visual C++ that generated the file, and 
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
-
-DinaminaiMasyvai.cpp
-    This is the main application source file.
-    Contains the code to display the form.
-
-Form1.h
-    Contains the implementation of your form class and InitializeComponent() function.
-
-AssemblyInfo.cpp
-    Contains custom attributes for modifying assembly metadata.
-
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named DinaminaiMasyvai.pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
+Programos naudojimo gidas ir nuoseklus veikimo principo apraðas:
+1. Paleidus programà vrtotojas turi pasrinkti du duomenø failus.
+2. Pasirinkus duomenø failus leidþiama paspausti mygtukà, kuris apskaièiuos rezultatus.
+Duomenø failai turi minimalæ reikalaujamà sintaksæ, todël yra ádëtos apsaugos, 
+kurios neleis skaityti betkokios failo. Klaidø valdymas sutvarkytas taip, kad vartotojas suprastø, 
+kokià klaidà jis padarë.
+3. Paspaudus apskaièiamimo mygtukà yra suskaièiuojamas rezultatas ir suraðomas á failà,
+tada atnaujinamas tekstinis laukas tekstinio failo turiniu.
+4. Tik tada kai vartotojas pasirenka rykiavimo tipà jam leidþiama surikiuoti duomenis.
+5. Reikalutas uþdarymo mygtukas uþdaro programà.
