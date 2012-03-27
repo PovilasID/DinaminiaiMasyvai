@@ -45,7 +45,6 @@ void readRecipes(Recipe* &R,const char* rFilePath, int n){
 		R[i].setRName(sTemp.substr(1));
 		i--;
 	}else{
-		R[i].toFirstIng();
 		do {
 			if(!sTemp.empty() && sTemp[0] != DELIM){
 				string::const_iterator pos = find(sTemp.begin(), sTemp.end(), '|');
@@ -53,8 +52,7 @@ void readRecipes(Recipe* &R,const char* rFilePath, int n){
 				string a_raw(pos + 1, sTemp.end());
 				a_raw = trim(a_raw);
 				double amount(atof(a_raw.c_str()));
-				R[i].setIng(trim(name), amount);
-				R[i].toNextIng();
+				R[i].addIng(Iingredient(trim(name), amount));
 			}else{
 				read = false;
 				break;
@@ -98,19 +96,17 @@ void calculateResults(Recipe* R, vector<Order> o, vector<Iingredient> & c, int n
 		}
 		ll = l++;
 		if(sr != -1){
-			R[sr].toFirstIng();
-			while(R[sr].notLastIng()){//Sukamas ciklas per visus rasto recepto ingridientus
+			for(int z = 0; z<int(R[sr].getIngs().size()); z++ ){//Sukamas ciklas per visus rasto recepto ingridientus
 				for(k = kk; k < int(c.size()); k++){
-					if(c[k].getName() == R[sr].getIngName()){ sc = i; break;}
+					if(c[k].getName() == R[sr].getIngs()[z].getName()){ sc = i; break;}
 				}
 				kk = k++;
-				currentAmount = R[sr].getIngAmount()*o[i].getUnits();
+				currentAmount = R[sr].getIngs()[z].getAmount()*o[i].getUnits();
 				if(sc == -1){
-					c.push_back(Iingredient(R[sr].getIngName(), currentAmount));
+					c.push_back(Iingredient(R[sr].getIngs()[z].getName(), currentAmount));
 				}else{
 					c[sc].setAmount(c[sc].getAmount()+currentAmount);			
 				}
-				R[sr].toNextIng();
 			}
 		}
 	}

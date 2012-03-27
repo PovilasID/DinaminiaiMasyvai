@@ -6,49 +6,82 @@
 using namespace std;
 
 class Recipe{
-
+	struct Ingredient{
+		Iingredient I;
+		Ingredient * next;
+	};
     string partsName;
-	int n;
-	int ingCurrent;
-	Iingredient *ing;
+	Ingredient *ing;
+	Ingredient *temp;
 	
 public:
-	Recipe(): ing(NULL), ingCurrent(0), n(0){}
-	~Recipe(){ delete [] ing; }
+	Recipe():ing(NULL), temp(NULL), partsName(""){}
+	~Recipe(){ Destroy(); }
+	
+	void toStart()	{ temp = ing;					}
+	void toNext()	{ if(temp) temp = temp->next;	}
+	bool notLast()	{ return temp != NULL;			}
 
-	//Set possition
-	void toFirstIng() {ingCurrent = 0;}
-	void toNextIng() {if(ingCurrent < n)ingCurrent++;}
-	bool notLastIng() {return ingCurrent < n;}
-
-	//Container management
-	void expandIng(int kiek){
-	  Iingredient *NIng = new Iingredient[kiek];
-	  for (int i = 0; i < n; i++)
-			NIng[i] = ing[i];
-	    delete [] ing;
-		ing = NIng;
-		n = kiek;
-	}
-
-	void addIng(string name, double amount){
-	  expandIng(n+1);
-	  ing[n-1].setIng(name, amount);
-	  ingCurrent = n;
-	}
-	void setIng(string name, double amount){
-		if(ingCurrent+1<=n){
-			ing[ingCurrent].setIng(name, amount);
-		}else{
-			addIng(name, amount);
+	void Destroy(){
+		while(ing){
+			temp = ing;
+			ing = ing->next;
+			delete temp;
 		}
 	}
+
+	void addIng(Iingredient i){
+		Ingredient * temp = new Ingredient;
+		temp->I = i;
+		temp->next = ing;
+		ing = temp;
+	}
+
+
+	Iingredient getIng(){ return temp->I; }
+
+	void Sort(){
+		Iingredient iTemp;
+		for(Ingredient * temp1 = ing; temp1!=NULL; temp1=temp1->next){
+			for(Ingredient * temp2 = ing; temp2!=NULL; temp2=temp2->next){
+				if(temp2->I < temp1->I){
+					iTemp = temp1->I;
+					temp1->I = temp2->I;
+					temp2->I = iTemp;
+					
+				}
+			}
+		}
+
+	}
+
+	//void addIng(string name, double amount){
+	//	Ingredient *temp = new Ingredient;
+	//	temp->iName = name;
+	//	temp->iAmount = amount;
+	//	temp->next = NULL;
+	//	if(ing == NULL){
+	//		ing = temp;
+	//	}else{
+	//		for(Ingredient *temp2= ing; temp2->next; temp2 = temp2->next){
+	//			temp2->next = temp;
+	//		}
+	//	}
+	//	delete temp;
+	//}
  
 	//Get
 	string getRName		()	{ return partsName;						}
-	string getIngName	()	{ return ing[ingCurrent].getName();		}
-	double getIngAmount	()	{ return ing[ingCurrent].getAmount();	}
-	int getN			()	{ return n;								}
+	vector<Iingredient> getIngs() {
+		vector<Iingredient> ret;
+		Iingredient tempStruct;
+		for (Ingredient *temp = ing; temp != NULL; temp = temp->next) {
+			ret.push_back(temp->I);
+		}
+		return ret;
+	}
+	//string getIngName	()	{ return ing[ingCurrent].getName();		}
+	//double getIngAmount	()	{ return ing[ingCurrent].getAmount();	}}
 
 	//Set
 	void setRName	(string a)	{ partsName = a; }
