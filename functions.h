@@ -123,7 +123,7 @@ void checkAgainstDuplicates(bool & noDuplicates, Recipe* R, int n){
 }
 
 
-void getData(vector<Iingredient> & c, String^ recipesFilePath, String^ orderFilePath, int & error){
+void getData(vector<Iingredient> & c, String^ recipesFilePath, String^ orderFilePath, int & error, double deLimit){
  Recipe* R;
  vector<Order> o;
  string sTemp;
@@ -149,6 +149,12 @@ void getData(vector<Iingredient> & c, String^ recipesFilePath, String^ orderFile
 			readRecipes(R, rFilePath, n);
 			bool noDuplicates;
 			checkAgainstDuplicates(noDuplicates, R, n);
+			if(deLimit > -1){
+				for(int i = 0; i < n; i++){
+					R[i].Sort();
+					R[i].delTo(deLimit);
+				}
+			}
 			if(!noDuplicates){
 				error = 3;
 			}

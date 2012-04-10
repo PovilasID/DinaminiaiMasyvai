@@ -75,8 +75,11 @@ namespace DinaminaiMasyvai {
 	private: System::Windows::Forms::ComboBox^  comboBox1;
 	private: System::Windows::Forms::Button^  button4;
 	private: System::Windows::Forms::Button^  button5;
+	private: System::Windows::Forms::Button^  button6;
 	private: System::ComponentModel::IContainer^  components;
 
+
+	
 
 	protected: 
 
@@ -103,6 +106,7 @@ namespace DinaminaiMasyvai {
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button5 = (gcnew System::Windows::Forms::Button());
+			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -125,7 +129,7 @@ namespace DinaminaiMasyvai {
 				static_cast<System::Byte>(0)));
 			this->richTextBox1->Location = System::Drawing::Point(12, 41);
 			this->richTextBox1->Name = L"richTextBox1";
-			this->richTextBox1->Size = System::Drawing::Size(556, 290);
+			this->richTextBox1->Size = System::Drawing::Size(663, 290);
 			this->richTextBox1->TabIndex = 1;
 			this->richTextBox1->Text = L"";
 			// 
@@ -133,7 +137,7 @@ namespace DinaminaiMasyvai {
 			// 
 			this->button2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->button2->Enabled = false;
-			this->button2->Location = System::Drawing::Point(382, 12);
+			this->button2->Location = System::Drawing::Point(424, 12);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(75, 23);
 			this->button2->TabIndex = 2;
@@ -144,7 +148,7 @@ namespace DinaminaiMasyvai {
 			// button3
 			// 
 			this->button3->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-			this->button3->Location = System::Drawing::Point(493, 12);
+			this->button3->Location = System::Drawing::Point(600, 12);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 3;
@@ -163,7 +167,7 @@ namespace DinaminaiMasyvai {
 			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"Pasirinkite tavrka...", L"Didejimo", L"Mazejimo"});
 			this->comboBox1->Location = System::Drawing::Point(255, 14);
 			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(121, 21);
+			this->comboBox1->Size = System::Drawing::Size(163, 21);
 			this->comboBox1->TabIndex = 4;
 			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::comboBox1_SelectedIndexChanged);
 			// 
@@ -187,11 +191,23 @@ namespace DinaminaiMasyvai {
 			this->button5->UseVisualStyleBackColor = true;
 			this->button5->Click += gcnew System::EventHandler(this, &Form1::button5_Click);
 			// 
+			// button6
+			// 
+			this->button6->Enabled = false;
+			this->button6->Location = System::Drawing::Point(505, 12);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(75, 23);
+			this->button6->TabIndex = 7;
+			this->button6->Text = L"Ginti";
+			this->button6->UseVisualStyleBackColor = true;
+			this->button6->Click += gcnew System::EventHandler(this, &Form1::button6_Click);
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(580, 343);
+			this->ClientSize = System::Drawing::Size(687, 343);
+			this->Controls->Add(this->button6);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->comboBox1);
@@ -251,7 +267,7 @@ namespace DinaminaiMasyvai {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 					vector<Iingredient> c;
 					int error;
-					getData(c, getRecipesFile(), getOrdersFile(), error);
+					getData(c, getRecipesFile(), getOrdersFile(), error,  -1);
 					if(fileCheck(error)){
 						writeData(c);
 						richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
@@ -262,7 +278,7 @@ namespace DinaminaiMasyvai {
 					vector<Iingredient> c;
 					int error;
 					
-					getData(c, getRecipesFile(), getOrdersFile(), error);
+					getData(c, getRecipesFile(), getOrdersFile(), error, -1);
 					if(fileCheck(error)){
 							switch(comboBox1->SelectedIndex){
 								case 0:
@@ -325,10 +341,20 @@ private: System::Void button5_Click(System::Object^  sender, System::EventArgs^ 
 					if(getRecipesFile() != nullptr){
 						button1->Enabled = true;
 						comboBox1->Enabled = true;
+						button6->Enabled = true;
 					}
                   myStream->Close();
 				}
 			  }
+		 }
+private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) {
+				vector<Iingredient> c;
+				int error;
+				getData(c, getRecipesFile(), getOrdersFile(), error,  5);
+				if(fileCheck(error)){
+					writeData(c);
+					richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
+				}
 		 }
 };
 }

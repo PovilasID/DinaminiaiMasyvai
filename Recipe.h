@@ -55,6 +55,21 @@ public:
 
 	}
 
+	void delTo(double a){
+		Sort();
+
+		while(ing->I.getAmount() > a){
+			if(ing->next != NULL){
+				Ingredient *trash = ing;
+				ing = ing->next;
+				delete trash;
+			}else{
+				ing = NULL;
+				break;
+			}
+		}
+	}
+
 	//void addIng(string name, double amount){
 	//	Ingredient *temp = new Ingredient;
 	//	temp->iName = name;
