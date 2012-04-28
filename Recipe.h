@@ -6,10 +6,22 @@
 using namespace std;
 
 class Recipe{
-	struct Ingredient{
+	class Ingredient{
+	private:
 		Iingredient I;
 		Ingredient * next;
 		Ingredient * back;
+	public:
+		Ingredient(Iingredient ii = Iingredient(), Ingredient *n = NULL, Ingredient *b = NULL ): I(ii), next(n), back (b){}
+		~Ingredient(){}
+		//Set
+		void setI	(const Iingredient & a)	{ I = a;	}
+		void setNext(Ingredient * a)		{ next = a; }
+		void setBack(Ingredient * a)		{ back = a; }
+		//Get
+		Iingredient getI()		{ return I; }
+		Ingredient	*getNext()	{ return next; }
+		Ingredient	*getBack()	{ return back; }
 	};
     string partsName;
 	Ingredient *ing;
@@ -19,58 +31,58 @@ class Recipe{
 public:
 	Recipe(){
 		ing = new Ingredient; 
-		ing->next = NULL;
-		ing->back = NULL;
+		ing->setNext(NULL);
+		ing->setBack(NULL);
 		gin = ing;	
-		gin->next = new Ingredient;
-		gin->next->back = gin;
-		gin = gin->next;
-		gin->next = NULL;
+		gin->setNext(new Ingredient);
+		gin->getNext()->setBack(gin);
+		gin = gin->getNext();
+		gin->setNext(NULL);
 		partsName = "";
 
 	}
 	~Recipe(){ Destroy(); }
 	
-	void toStart()	{ temp = ing;					}
-	void toNext()	{ if(temp) temp = temp->next;	}
-	bool notLast()	{ return temp != NULL;			}
+	void toStart()	{ temp = ing;						}
+	void toNext()	{ if(temp) temp = temp->getNext();	}
+	bool notLast()	{ return temp != NULL;				}
 
 	void Destroy(){
 		while(ing){
 			temp = ing;
-			ing = ing->next;
+			ing = ing->getNext();
 			delete temp;
 		}
 		while(gin){
 			temp = gin;
-			gin = gin->back;
+			gin = gin->getBack();
 			delete temp;
 		}
+		ing = gin = NULL;
 	}
-
 
 	void addIng(Iingredient i){
 		Ingredient * temp = new Ingredient;
-		temp->I = i;
+		temp->setI(i);
 		Ingredient *pos = new Ingredient;
-		pos = gin->back;
-		temp->back = pos;
-		temp->next = pos->next;
-		pos->next = temp;
-		temp->next->back = temp;
+		pos = gin->getBack();
+		temp->setBack(pos);
+		temp->setNext(pos->getNext());
+		pos->setNext(temp);
+		temp->getNext()->setBack(temp);
 	}
 
 
-	Iingredient getIng(){ return temp->I; }
+	Iingredient getIng(){ return temp->getI(); }
 
 	void Sort(){
 		Iingredient iTemp;
-		for(Ingredient * temp1 = ing; temp1!=NULL; temp1=temp1->next){
-			for(Ingredient * temp2 = ing; temp2!=NULL; temp2=temp2->next){
-				if(temp2->I < temp1->I){
-					iTemp = temp1->I;
-					temp1->I = temp2->I;
-					temp2->I = iTemp;
+		for(Ingredient * temp1 = ing; temp1!=NULL; temp1=temp1->getNext()){
+			for(Ingredient * temp2 = ing; temp2!=NULL; temp2=temp2->getNext()){
+				if(temp2->getI() < temp1->getI()){
+					iTemp = temp1->getI();
+					temp1->setI(temp2->getI());
+					temp2->setI(iTemp);
 					
 				}
 			}
@@ -79,17 +91,17 @@ public:
 	}
 
 	void del(Ingredient * delet){
-		delet->next->back = delet->back;
-		delet->back->next = delet->next;
+		delet->getNext()->setBack(delet->getBack());
+		delet->getBack()->setNext(delet->getNext());
 		delete delet;
 	}
 
 	//I6rina ingridientus kuriu kiekis yra didesnis nei nurodytas (yra klaidu) 
 	void delTo(double a){
-		for (Ingredient *temp2 = ing->next; temp2->next != NULL; temp2 = temp2->next) {
-			if(temp2->I.getAmount() > a && temp2->I.getAmount() != 0){
-				temp2 = temp2->next; 
-				del(temp2->back); 
+		for (Ingredient *temp2 = ing->getNext(); temp2->getNext() != NULL; temp2 = temp2->getNext()) {
+			if(temp2->getI().getAmount() > a && temp2->getI().getAmount() != 0){
+				temp2 = temp2->getNext(); 
+				del(temp2->getBack()); 
 			}
 		}
 	}
@@ -101,8 +113,8 @@ public:
 	vector<Iingredient> getIngs() {
 		vector<Iingredient> ret;
 		Iingredient tempStruct;
-		for (Ingredient *temp = ing->next; temp->next != NULL; temp = temp->next) {
-			ret.push_back(temp->I);
+		for (Ingredient *temp = ing->getNext(); temp->getNext() != NULL; temp = temp->getNext()) {
+			ret.push_back(temp->getI());
 		}
 		return ret;
 	}
