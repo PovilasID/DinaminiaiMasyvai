@@ -284,14 +284,17 @@ namespace DinaminaiMasyvai {
 								case 0:
 									MessageBox::Show("Prasome pasirinkti rusiavimo metoda",
 										"Nepasrinktas rusiavimo metodas",MessageBoxButtons::OK,MessageBoxIcon::Warning);
+									break;
 								case 1:
 									sortDataAsc(c);
 									writeData(c);
 									richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
+									break;
 								case 2:
 									sortDataDesc(c);
 									writeData(c);
 									richTextBox1->LoadFile(resultsSysString, RichTextBoxStreamType::PlainText);
+									break;
 							}
 					}
 			 }

@@ -90,22 +90,25 @@ void calculateResults(Recipe* R, vector<Order> o, vector<Iingredient> & c, int n
 	int sr = -1;
 	int sc = -1;
 	double currentAmount = 0;
+	string tempRName;
 	for(int i = 0; i < int(o.size()); i++){ //Sukami visi  uzsakymai
 		for(l = ll; l < n; l++){ //Surandamas uzsakyma atitinkantis receptas
 			if(R[l].getRName() == o[i].getName()){ sr = l; break; }
 		}
-		ll = l++;
+		ll = ++l;
 		if(sr != -1){
 			for(int z = 0; z<int(R[sr].getIngs().size()); z++ ){//Sukamas ciklas per visus rasto recepto ingridientus
+			tempRName =  R[sr].getIngs()[z].getName();
+			sc = -1;
 				for(k = kk; k < int(c.size()); k++){
-					if(c[k].getName() == R[sr].getIngs()[z].getName()){ sc = i; break;}
+					if(c[k].getName() == tempRName){ sc = k; break;}
 				}
-				kk = k++;
+				kk = 0;
 				currentAmount = R[sr].getIngs()[z].getAmount()*o[i].getUnits();
 				if(sc == -1){
-					c.push_back(Iingredient(R[sr].getIngs()[z].getName(), currentAmount));
+					c.push_back(Iingredient(tempRName, currentAmount));
 				}else{
-					c[sc].setAmount(c[sc].getAmount()+currentAmount);			
+					c[sc].setAmount(c[sc].getAmount()+currentAmount);
 				}
 			}
 		}
@@ -136,7 +139,7 @@ void getData(vector<Iingredient> & c, String^ recipesFilePath, String^ orderFile
 	}else if(error == -1){
 		const char* rFilePath = (const char*)(void*)Marshal::StringToHGlobalAnsi(recipesFilePath);
 
-		ifstream fileN(rFilePath); //DO NOT FORGET THIS
+		ifstream fileN(rFilePath);
 		if(fileN.good()){
 		  while(!fileN.eof()){getline(fileN,sTemp); if(sTemp[0] == DELIM)n++;}
 		  fileN.close();
@@ -147,6 +150,7 @@ void getData(vector<Iingredient> & c, String^ recipesFilePath, String^ orderFile
 		if(n != 0){
 			R = new Recipe[n];
 			readRecipes(R, rFilePath, n);
+
 			bool noDuplicates;
 			checkAgainstDuplicates(noDuplicates, R, n);
 			if(deLimit > -1){
@@ -189,6 +193,7 @@ void writeData(vector<Iingredient> c){
 	fileRez << left << "|" <<setw(5) << " " <<setw(25) << "Medziagos pavadinimas" << "|" << setw(7) << " " << setw(13) << "KIEKIS" << "|" << endl;
 	fileRez << Line(53) << endl;
 	for(int i = 0; i < int(c.size()); i++){
+		//if(c[i].getName() != "")
 		fileRez << left << "|" <<setw(10)<< " " <<setw(20)<< c[i].getName() << "|"  << right << setw(13) << c[i].getAmount() << " " << setw(7) << "|" << endl;
 	}
 	fileRez << Line(53) << endl;

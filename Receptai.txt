@@ -1,6 +1,8 @@
 >Velenas
 gelezies	| 150
+plieno		| 35
 cinko		| 20
+vanadzio	| 5
 >Alkune
 plieno		| 150
 angliu		| 10

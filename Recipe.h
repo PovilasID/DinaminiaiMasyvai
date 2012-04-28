@@ -9,13 +9,26 @@ class Recipe{
 	struct Ingredient{
 		Iingredient I;
 		Ingredient * next;
+		Ingredient * back;
 	};
     string partsName;
 	Ingredient *ing;
+	Ingredient *gin;
 	Ingredient *temp;
 	
 public:
-	Recipe():ing(NULL), temp(NULL), partsName(""){}
+	Recipe(){
+		ing = new Ingredient; 
+		ing->next = NULL;
+		ing->back = NULL;
+		gin = ing;	
+		gin->next = new Ingredient;
+		gin->next->back = gin;
+		gin = gin->next;
+		gin->next = NULL;
+		partsName = "";
+
+	}
 	~Recipe(){ Destroy(); }
 	
 	void toStart()	{ temp = ing;					}
@@ -28,13 +41,23 @@ public:
 			ing = ing->next;
 			delete temp;
 		}
+		while(gin){
+			temp = gin;
+			gin = gin->back;
+			delete temp;
+		}
 	}
+
 
 	void addIng(Iingredient i){
 		Ingredient * temp = new Ingredient;
 		temp->I = i;
-		temp->next = ing;
-		ing = temp;
+		Ingredient *pos = new Ingredient;
+		pos = gin->back;
+		temp->back = pos;
+		temp->next = pos->next;
+		pos->next = temp;
+		temp->next->back = temp;
 	}
 
 
@@ -55,48 +78,35 @@ public:
 
 	}
 
-	void delTo(double a){
-		Sort();
+	void del(Ingredient * delet){
+		delet->next->back = delet->back;
+		delet->back->next = delet->next;
+		delete delet;
+	}
 
-		while(ing->I.getAmount() > a){
-			if(ing->next != NULL){
-				Ingredient *trash = ing;
-				ing = ing->next;
-				delete trash;
-			}else{
-				ing = NULL;
-				break;
+	//I6rina ingridientus kuriu kiekis yra didesnis nei nurodytas (yra klaidu) 
+	void delTo(double a){
+		for (Ingredient *temp2 = ing->next; temp2->next != NULL; temp2 = temp2->next) {
+			if(temp2->I.getAmount() > a && temp2->I.getAmount() != 0){
+				temp2 = temp2->next; 
+				del(temp2->back); 
 			}
 		}
 	}
 
-	//void addIng(string name, double amount){
-	//	Ingredient *temp = new Ingredient;
-	//	temp->iName = name;
-	//	temp->iAmount = amount;
-	//	temp->next = NULL;
-	//	if(ing == NULL){
-	//		ing = temp;
-	//	}else{
-	//		for(Ingredient *temp2= ing; temp2->next; temp2 = temp2->next){
-	//			temp2->next = temp;
-	//		}
-	//	}
-	//	delete temp;
-	//}
+
  
 	//Get
 	string getRName		()	{ return partsName;						}
 	vector<Iingredient> getIngs() {
 		vector<Iingredient> ret;
 		Iingredient tempStruct;
-		for (Ingredient *temp = ing; temp != NULL; temp = temp->next) {
+		for (Ingredient *temp = ing->next; temp->next != NULL; temp = temp->next) {
 			ret.push_back(temp->I);
 		}
 		return ret;
 	}
-	//string getIngName	()	{ return ing[ingCurrent].getName();		}
-	//double getIngAmount	()	{ return ing[ingCurrent].getAmount();	}}
+
 
 	//Set
 	void setRName	(string a)	{ partsName = a; }
